@@ -46,6 +46,25 @@ export class Queries {
             .catch(console.log);
     }
 
+    getSingleEmployee(id) {
+        this.db
+            .promise()
+            .query(`select
+                    employee.first_name,
+                    employee.last_name,
+                    roles.title,
+                    department.name as department
+                    from employee
+                    left join roles on roles.id = employee.role_id
+                    left join department on department.id = roles.department_id
+                    where employee.id = ?`, [id]
+                    )
+                    .then(([rows, fields]) => {
+                        console.table(rows);
+                    })
+                    .catch(console.log);
+    }
+
     getAllRoles() {
         this.db
             .promise()
@@ -100,8 +119,7 @@ export class Queries {
 
 const data = new Queries();
 
-data.updateEmployee(1, 1);
-data.getAllEmployees();
+data.getSingleEmployee(1);
 
 // class Queries {
 //     constructor(db) {
